@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>EpochZero.ProgressBar</PackageId>
+    <Authors>AswinPG</Authors>
+    <Company>EpochZero</Company>
+    <Description>A custom progress bar that can show gradiet progress. Build using skiasharp</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/AswinPG/GradientBar</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AswinPG/GradientBar</RepositoryUrl>
+    <PackageTags>Bar</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.1" />
+  </ItemGroup>
+
+</Project>

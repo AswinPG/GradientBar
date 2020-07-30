@@ -19,5 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\GradientProgressBar\GradientProgressBar.csproj" />
+    <ProjectReference Include="..\GradientProgressBar\GradientProgressBar.csproj" />
   </ItemGroup>
 </Project>
