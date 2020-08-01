@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://github.com/AswinPG/GradientBar</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AswinPG/GradientBar</RepositoryUrl>
     <PackageTags>Bar</PackageTags>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

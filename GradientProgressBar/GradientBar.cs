@@ -26,14 +26,40 @@ namespace GradientProgressBar
         public static readonly BindableProperty DrawLabelProperty =
             BindableProperty.Create(nameof(DrawLabel), typeof(bool), typeof(GradientBar), false, propertyChanged: OnPropertyChanged);
         public static readonly BindableProperty UseRoundedBordersProperty =
-            BindableProperty.Create(nameof(UseRoundedBorders), typeof(bool), typeof(GradientBar), true, propertyChanged: OnPropertyChanged);
-        private SKPoint _touchPoint;
+            BindableProperty.Create(nameof(UseRoundedBorders), typeof(bool), typeof(GradientBar), false, propertyChanged: OnPropertyChanged);
 
+
+
+
+        public static readonly BindableProperty IRadialProperty =
+            BindableProperty.Create(nameof(IsRadial), typeof(bool), typeof(GradientBar), false, propertyChanged: OnPropertyChanged);
+
+        public static readonly BindableProperty StartAngleProperty =
+            BindableProperty.Create(nameof(StartAngle), typeof(float), typeof(GradientBar), 0f, propertyChanged: OnPropertyChanged);
+
+        //private SKPoint _touchPoint;
+
+        //public double RadiusofCircle { get; set; }
         public float Progress
         {
             get => (float)GetValue(ProgressProperty);
             set => SetValue(ProgressProperty, value);
         }
+        public bool IsRadial
+        {
+            get => (bool)GetValue(IRadialProperty);
+            set => SetValue(IRadialProperty, value);
+        }
+        public float StartAngle
+        {
+            get => (float)GetValue(StartAngleProperty);
+            set => SetValue(StartAngleProperty, value);
+        }
+        //public float EndAngle
+        //{
+        //    get => (float)GetValue(EndAngleProperty);
+        //    set => SetValue(EndAngleProperty, value);
+        //}
         public float StrokeWidth
         {
             get => (float)GetValue(StrokeWidthProperty);
@@ -76,17 +102,17 @@ namespace GradientProgressBar
 
 
 
-        protected override void OnTouch(SKTouchEventArgs e)
-        {
-            if (e.ActionType == SKTouchAction.Entered
-                || e.ActionType == SKTouchAction.Pressed
-                || e.ActionType == SKTouchAction.Moved)
-            {
-                _touchPoint = e.Location;
-                InvalidateSurface();
-            }
-            e.Handled = true;
-        }
+        //protected override void OnTouch(SKTouchEventArgs e)
+        //{
+        //    if (e.ActionType == SKTouchAction.Entered
+        //        || e.ActionType == SKTouchAction.Pressed
+        //        || e.ActionType == SKTouchAction.Moved)
+        //    {
+        //        _touchPoint = e.Location;
+        //        InvalidateSurface();
+        //    }
+        //    e.Handled = true;
+        //}
 
 
 
@@ -98,11 +124,65 @@ namespace GradientProgressBar
             SKCanvas canvas = surface.Canvas;
             canvas.Clear();
             canvas.Save();
-            Progress = _touchPoint.X / info.Width;
-            DrawBackLine(info, canvas);
-            DrawFrontLine(info, canvas);
-            DrawLabelIfRequired(info, canvas);
-            canvas.Restore();
+            //Progress = _touchPoint.X / info.Width;
+            //double Radius = Math.Pow(_touchPoint.X - info.Width/2, 2) + Math.Pow(_touchPoint.Y - info.Height/2, 2);
+
+
+
+            //var Xcord = _touchPoint.X - (info.Width / 2);
+            //var Ycord = _touchPoint.Y - (info.Height / 2);
+            //double b = Math.Asin(Ycord / (info.Width / 2)) * (180 / Math.PI);
+            //if (Xcord >= 0 && Ycord >= 0)
+            //{
+            //    EndAngle = Convert.ToSingle(b);
+            //}
+            //else if (Xcord < 0 && Ycord >= 0)
+            //{
+            //    EndAngle = 180 - Convert.ToSingle(b);
+            //}
+            //else if (Xcord < 0 && Ycord < 0)
+            //{
+            //    EndAngle = 90 + Convert.ToSingle(b);
+            //}
+            //else if (Xcord >= 0 && Ycord < 0)
+            //{
+            //    EndAngle = -(180 + Convert.ToSingle(b));
+            //}
+
+
+            //if (Radius >= (RadiusofCircle-30000)  && Radius <= (RadiusofCircle + 30000))
+            //{
+                
+
+
+            //    //if (_touchPoint.X > _touchPoint.Y)
+            //    //{
+            //    //    EndAngle = _touchPoint.X-info.Width * 360;
+            //    //}
+            //    //else
+            //    //{
+            //    //    EndAngle = _touchPoint.Y/info.Height * 360;
+            //    //}
+            //}
+            //else
+            //{
+
+            //}
+            
+            if (IsRadial)
+            {
+                DrawArc(info, canvas, BackColor, null, 2f);
+                InnerDrawArc(info,canvas,Color.Transparent,null,2f);
+                canvas.Restore();
+            }
+            else 
+            {
+                DrawBackLine(info, canvas);
+                DrawFrontLine(info, canvas);
+                DrawLabelIfRequired(info, canvas);
+                canvas.Restore();
+            }
+            
         }
         private void DrawBackLine(SKImageInfo info, SKCanvas canvas)
         {
@@ -161,6 +241,83 @@ namespace GradientProgressBar
                     paint);
             };
         }
+
+
+        private void InnerDrawArc(
+            SKImageInfo info,
+            SKCanvas canvas,
+            Color color,
+            SKShader shader,
+            float widthFactor)
+        {
+            
+
+
+
+            //canvas.Clear();
+
+            SKRect rect = new SKRect(StrokeWidth, StrokeWidth, info.Width - StrokeWidth, info.Height - StrokeWidth);
+            //RadiusofCircle = Math.Pow(rect.Width/2,2);
+
+
+            float startAngle = StartAngle;
+            float sweepAngle = Progress * (360 - StartAngle);
+
+            //canvas.DrawOval(rect, new SKPaint() { Color = color.ToSKColor() });
+
+            using (SKPath path = new SKPath())
+            {
+                path.AddArc(rect, startAngle, sweepAngle);
+                canvas.DrawPath(path, new SKPaint() { IsAntialias = true, StrokeCap = UseRoundedBorders ? SKStrokeCap.Round : SKStrokeCap.Butt , IsStroke = true, StrokeWidth = StrokeWidth,Shader = SKShader.CreateLinearGradient(
+                    new SKPoint(0, 0),
+                    new SKPoint(info.Width, info.Height),
+                    new[] { FrontColorFrom.ToSKColor(), FrontColorTo.ToSKColor() },
+                    new[] { 0f, 1f },
+                    SKShaderTileMode.Clamp)
+            });
+            }
+
+
+        }
+        private void DrawArc(
+            SKImageInfo info,
+            SKCanvas canvas,
+            Color color,
+            SKShader shader,
+            float widthFactor)
+        {
+
+
+
+
+            //canvas.Clear();
+
+            SKRect rect = new SKRect(StrokeWidth, StrokeWidth, info.Width - StrokeWidth, info.Height - StrokeWidth);
+            //RadiusofCircle = Math.Pow(rect.Width/2,2);
+
+
+            float startAngle = StartAngle;
+            float sweepAngle = (360 - StartAngle);
+
+            //canvas.DrawOval(rect, new SKPaint() { Color = color.ToSKColor() });
+
+            using (SKPath path = new SKPath())
+            {
+                path.AddArc(rect, startAngle, sweepAngle);
+                canvas.DrawPath(path, new SKPaint()
+                {
+                    IsAntialias = true,
+                    StrokeCap = UseRoundedBorders ? SKStrokeCap.Round : SKStrokeCap.Butt,
+                    IsStroke = true,
+                    StrokeWidth = StrokeWidth,
+                    Color = BackColor.ToSKColor()
+                });
+            }
+
+
+        }
+
+
 
         private void DrawLabelIfRequired(SKImageInfo info, SKCanvas canvas)
         {

@@ -9,14 +9,63 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackLayout>
-        <!--  Place new controls here  -->
-        <Label
-            HorizontalOptions="Center"
-            Text="Welcome to Xamarin.Forms!"
-            VerticalOptions="CenterAndExpand" />
+    <ScrollView>
+        <StackLayout Padding="20">
+            <!--  Place new controls here  -->
 
-        <controls1:GradientBar />
-    </StackLayout>
+            <controls1:GradientBar
+                x:Name="MainGuage"
+                Margin="40"
+                BackColor="Gray"
+                FrontColorFrom="Red"
+                FrontColorTo="Orange"
+                HeightRequest="300"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="CenterAndExpand"
+                WidthRequest="300" />
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Radial" />
+                <Switch IsToggled="False" Toggled="Radial_Switch_Toggled" />
+                <Label Text="RoundedEnds" />
+                <Switch IsToggled="False" Toggled="Rouned_Switch_Toggled" />
+            </StackLayout>
+            <Label Text="StartAngle" />
+            <Slider
+                MaximumTrackColor="Gray"
+                ValueChanged="StartAngle_Slider_ValueChanged"
+                Value="0" />
+            <Label Text="Progress" />
+            <Slider
+                MaximumTrackColor="Gray"
+                ValueChanged="Progreess_Slider_ValueChanged"
+                Value="0" />
+            <Label Text="Rotation" />
+            <Slider
+                MaximumTrackColor="Gray"
+                ValueChanged="RSlider_ValueChanged"
+                Value="0" />
+            <Label Text="RotationX" />
+            <Slider
+                MaximumTrackColor="Gray"
+                ValueChanged="XSlider_ValueChanged"
+                Value="0" />
+
+            <Label Text="RotationY" />
+            <Slider
+                MaximumTrackColor="Gray"
+                ValueChanged="YSlider_ValueChanged_1"
+                Value="0" />
+            <Label Text="Stroke Width" />
+            <Slider MaximumTrackColor="Gray" ValueChanged="Stroke_Slider_ValueChanged" />
+
+            <Entry Placeholder="StartColour Hex" TextChanged="StartColour_Entry_TextChanged" />
+            <Entry Placeholder="EndColour Hex" TextChanged="EndColour_Entry_TextChanged" />
+            <Entry Placeholder="BackColour Hex" TextChanged="BackColour_Entry_TextChanged" />
+
+
+
+        </StackLayout>
+
+    </ScrollView>
 
 </ContentPage>
